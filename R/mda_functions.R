@@ -1,17 +1,23 @@
-
-get_loadings <- function(m, n_factors, cor_min=.20, threshold=.35) {
+#' to other functions for more detailed and controlled plotting.
+#' @param data_frame A data.frame containing 1 categorical variable (as a factor) and continous (numeric) variables.
+#' @param n_factors The number of factors to be calculated in the factor analysis.
+#' @param cor_min The correlation threshold for including variables in the factor analysis.
+#' @param threshold A value indicating the threshold at which variables should be included in dimension score calculations (the default is .35).
+#' @return An mda data structure containing scores, means by group, and factor loadings
+#' @export
+mda_loadings <- function(data_frame, n_factors, cor_min=.20, threshold=.35) {
   
   # retrieve numberic variables
-  nums <- unlist(lapply(m, is.numeric))
-  fact <- unlist(lapply(m, is.factor))
+  nums <- unlist(lapply(data_frame, is.numeric))
+  fact <- unlist(lapply(data_frame, is.factor))
   
   # text conditions
   if (sum(fact == TRUE) != 1) stop ("You must have a single categorial variable formated as a factor.")
   if (sum(nums == TRUE) < 2) stop ("You must have multiple numeric variables.")
   
   # separate numeric variables from categorical variable
-  d <- m[ , nums]
-  g <- m[ , fact]
+  d <- data_frame[ , nums]
+  g <- data_frame[ , fact]
   
   # create correlation matrix
   m_cor <- cor(d, method = "pearson")
