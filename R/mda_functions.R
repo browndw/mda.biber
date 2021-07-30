@@ -1,5 +1,6 @@
-#' to other functions for more detailed and controlled plotting.
-#' @param data_frame A data.frame containing 1 categorical variable (as a factor) and continous (numeric) variables.
+#' Multi-Dimensional Analysis is a statistical procedure developed Biber and is commonly used in descriptions
+#' of language as it varies by genre, register, and task. 
+#' @param data_frame A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.
 #' @param n_factors The number of factors to be calculated in the factor analysis.
 #' @param cor_min The correlation threshold for including variables in the factor analysis.
 #' @param threshold A value indicating the threshold at which variables should be included in dimension score calculations (the default is .35).
