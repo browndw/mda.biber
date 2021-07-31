@@ -67,7 +67,7 @@ mda_loadings <- function(data_frame, n_factors, cor_min=.20, threshold=.35) {
 }
 
 
-plot_scree <- function(data_frame, cor_min=.20) {
+screeplot_mda <- function(data_frame, cor_min=.20) {
   nums <- unlist(lapply(data_frame, is.numeric))
   if (sum(nums == TRUE) < 2) stop ("You must have multiple numeric variables.")
   d <- data_frame[ , nums]
@@ -244,7 +244,8 @@ boxplot_mda <- function(mda_data, n_factor=1){
                  outlier.colour = "black",
                  outlier.shape = 21,
                  outlier.size = 1,
-                 outlier.fill = "red"
+                 outlier.fill = "red",
+                 fill = "#277F8EFF"
     ) +
     ggplot2::ylim(-max_y, max_y) +
     ggplot2::ylab(paste0("Dimension ", n_factor)) +
