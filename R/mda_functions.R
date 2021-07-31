@@ -81,7 +81,7 @@ plot_scree <- function(data_frame, cor_min=.20) {
   nFactors::plotnScree(nS, legend = F)
 }
 
-plot_stick <- function(mda_data, n_factor) {
+stickplot_mda <- function(mda_data, n_factor=1) {
   
   if (class(mda_data)[1] != "mda") stop ("Your mda_data must be an mda object.")
   scores <- attributes(mda_data)$group_means
@@ -113,7 +113,7 @@ plot_stick <- function(mda_data, n_factor) {
   return(p1)
 }
 
-plot_mda <- function(mda_data, n_factor) {
+heatmap_mda <- function(mda_data, n_factor=1) {
   
   if (class(mda_data)[1] != "mda") stop ("Your mda_data must be an mda object.")
   loadings <- attributes(mda_data)$loadings
@@ -220,3 +220,60 @@ plot_mda <- function(mda_data, n_factor) {
   return(p4)
 }
 
+boxplot_mda <- function(mda_data, n_factor=1){
+  
+  if (class(mda_data)[1] != "mda") stop ("Your mda_data must be an mda object.")
+  loadings <- attributes(mda_data)$loadings
+  scores <- attributes(mda_data)$group_means
+  threshold <- attributes(mda_data)$threshold
+  
+  factor_n <- paste0("Factor", n_factor)
+  
+  value_max <- max(abs(mda_data[,factor_n]))
+  vec_max <- max(abs(loadings[,factor_n]))
+  scalar <- (value_max/vec_max)
+  
+  loadings$Inclucde <- abs(loadings[, factor_n]) > threshold
+  loadings[, factor_n] <- loadings[, factor_n]*scalar
+  loadings <- cbind(Group = rownames(loadings), data.frame(loadings, row.names=NULL))
+  
+  max_y <- ceiling(value_max) + .5
+  
+  p1 <- ggplot2::ggplot(mda_data, ggplot2::aes(x = reorder(group, !!as.name(factor_n), FUN = mean), y= !!as.name(factor_n))) +
+    ggplot2::geom_boxplot(lwd=.25,
+                 outlier.colour = "black",
+                 outlier.shape = 21,
+                 outlier.size = 1,
+                 outlier.fill = "red"
+    ) +
+    ggplot2::ylim(-max_y, max_y) +
+    ggplot2::ylab(paste0("Dimension ", n_factor)) +
+    ggplot2::xlab("") +
+    ggplot2::theme_linedraw() +
+    ggplot2::theme(axis.text.y = ggplot2::element_text(size = 6)) +
+    ggplot2::theme(panel.grid.minor.x = ggplot2::element_blank()) +
+    ggplot2::theme(panel.grid.major.y = ggplot2::element_blank()) +
+    ggplot2::theme(panel.grid.minor.y = ggplot2::element_blank()) +
+    ggplot2::coord_flip()
+  
+  p2 <- ggplot2::ggplot(subset(loadings, Inclucde == T), ggplot2::aes(reorder(Group, !!as.name(factor_n)), !!as.name(factor_n))) + 
+    ggplot2::geom_hline(yintercept = 0, color = "gray80", size = .5) +
+    ggplot2::geom_segment(ggplot2::aes(xend = Group, yend = 0), size = .25, 
+                 arrow = ggplot2::arrow(type = "closed", 
+                               ends = "first", 
+                               angle = "15", 
+                               length = ggplot2::unit(0.1, "inches"))) + 
+    ggplot2::ylim(-max_y, max_y) +
+    ggplot2::ylab(paste0("Contributing Variables to Dimension ", n_factor)) +
+    ggplot2::xlab("") +
+    ggplot2::theme_linedraw() +
+    ggplot2::theme(axis.text.x = ggplot2::element_blank()) +
+    ggplot2::theme(axis.ticks.x = ggplot2::element_blank()) +
+    ggplot2::theme(panel.grid.minor.x = ggplot2::element_blank()) +
+    ggplot2::theme(panel.grid.major.x = ggplot2::element_blank()) +
+    ggplot2::theme(axis.text.y = ggplot2::element_text(size = 6)) +
+    ggplot2::coord_flip()
+  
+  p3 <- ggpubr::ggarrange(p2, p1, nrow = 2, align = "v", heights = c(1, 2) )
+  return(p3)
+}
