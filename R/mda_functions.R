@@ -19,6 +19,10 @@ mda_loadings <- function(data_frame, n_factors, cor_min=.20, threshold=.35) {
   # separate numeric variables from categorical variable
   d <- data_frame[ , nums]
   g <- data_frame[ , fact]
+  g <- as.ve
+  
+  # remove columns with all zeros
+  d <- d[, colSums(d != 0) > 0]
   
   # create correlation matrix
   m_cor <- cor(d, method = "pearson")
@@ -42,7 +46,7 @@ mda_loadings <- function(data_frame, n_factors, cor_min=.20, threshold=.35) {
     pos_sums <- rowSums(m_z[pos])
     neg_sums <- rowSums(m_z[neg])
     dim_score <- mapply(function (x,y) x-y, pos_sums, neg_sums)
-    dim_score <- data.frame(cbind(dim_score, as.character(g)), stringsAsFactors = F)
+    dim_score <- data.frame(cbind(dim_score, g), stringsAsFactors = F)
     colnames(dim_score) <- c("score", "group")
     dim_score$score <- as.numeric(dim_score$score)
     return(dim_score)
@@ -71,6 +75,8 @@ screeplot_mda <- function(data_frame, cor_min=.20) {
   nums <- unlist(lapply(data_frame, is.numeric))
   if (sum(nums == TRUE) < 2) stop ("You must have multiple numeric variables.")
   d <- data_frame[ , nums]
+  # remove columns with all zeros
+  d <- d[, colSums(d != 0) > 0]
   m_cor <- cor(d, method = "pearson")
   diag(m_cor) <- 0
   threshold <- apply(m_cor, 1, function(x) max(abs(x), na.rm = T) > .2)
