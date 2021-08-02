@@ -1,5 +1,10 @@
 #' Multi-Dimensional Analysis is a statistical procedure developed Biber and is commonly used in descriptions
-#' of language as it varies by genre, register, and task. 
+#' of language as it varies by genre, register, and task. The procedure is a specific application
+#' factor analysis, which is used as the basis for calculating a 'dimension score' for each text.
+#' 
+#' The function mda_loadings() returns a data.frame of dimension scores with the means for each category
+#' and the factor loadings accessible as attributes. Calculating MDA requires a data.frame containing
+#' a column with a categorical variable (formatted as a factor) and more than 2 continuous, numeric variables.
 #' @param data_frame A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.
 #' @param n_factors The number of factors to be calculated in the factor analysis.
 #' @param cor_min The correlation threshold for including variables in the factor analysis.
@@ -70,7 +75,11 @@ mda_loadings <- function(data_frame, n_factors, cor_min=.20, threshold=.35) {
   return(dim_score)
 }
 
-
+#' A wrapper for the [nScree](https://search.r-project.org/CRAN/refmans/nFactors/html/nScree.html) function included in the nFactors package.
+#' @param data_frame A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.
+#' @param cor_min The correlation threshold for including variables in the factor analysis.
+#' @return A scree plot.
+#' @export
 screeplot_mda <- function(data_frame, cor_min=.20) {
   nums <- unlist(lapply(data_frame, is.numeric))
   if (sum(nums == TRUE) < 2) stop ("You must have multiple numeric variables.")
@@ -87,6 +96,11 @@ screeplot_mda <- function(data_frame, cor_min=.20) {
   nFactors::plotnScree(nS, legend = F)
 }
 
+#' A simple function for producing the stick plots that are common in visualizing the location of category means along a given dimension.
+#' @param mda_data An mda data.frame produced by the mda_loadings() function.
+#' @param n_factor The factor to be plotted.
+#' @return A stick plot showing category means long a positve/negative cline.
+#' @export
 stickplot_mda <- function(mda_data, n_factor=1) {
   
   if (class(mda_data)[1] != "mda") stop ("Your mda_data must be an mda object.")
@@ -119,6 +133,11 @@ stickplot_mda <- function(mda_data, n_factor=1) {
   return(p1)
 }
 
+#' The heatmap_mda() function combines a stick plot with a heat map of the relevant factor loadings.
+#' @param mda_data An mda data.frame produced by the mda_loadings() function.
+#' @param n_factor The factor to be plotted.
+#' @return A comined stick plot and heat map.
+#' @export
 heatmap_mda <- function(mda_data, n_factor=1) {
   
   if (class(mda_data)[1] != "mda") stop ("Your mda_data must be an mda object.")
