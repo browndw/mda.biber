@@ -24,6 +24,7 @@ mda_loadings <- function(data_frame, n_factors, cor_min=.20, threshold=.35) {
   # separate numeric variables from categorical variable
   d <- data_frame[ , nums]
   g <- data_frame[ , fact]
+  g <- as.vector(g)
   
   # remove columns with all zeros
   d <- d[, colSums(d != 0) > 0]
