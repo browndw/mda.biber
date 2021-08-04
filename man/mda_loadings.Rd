@@ -6,10 +6,10 @@
 of language as it varies by genre, register, and task. The procedure is a specific application
 factor analysis, which is used as the basis for calculating a 'dimension score' for each text.}
 \usage{
-mda_loadings(data_frame, n_factors, cor_min = 0.2, threshold = 0.35)
+mda_loadings(obs_by_group, n_factors, cor_min = 0.2, threshold = 0.35)
 }
 \arguments{
-\item{data_frame}{A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.}
+\item{obs_by_group}{A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.}
 
 \item{n_factors}{The number of factors to be calculated in the factor analysis.}
 

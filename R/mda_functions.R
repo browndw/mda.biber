@@ -5,25 +5,25 @@
 #' The function mda_loadings() returns a data.frame of dimension scores with the means for each category
 #' and the factor loadings accessible as attributes. Calculating MDA requires a data.frame containing
 #' a column with a categorical variable (formatted as a factor) and more than 2 continuous, numeric variables.
-#' @param data A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.
+#' @param obs_by_group A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.
 #' @param n_factors The number of factors to be calculated in the factor analysis.
 #' @param cor_min The correlation threshold for including variables in the factor analysis.
 #' @param threshold A value indicating the threshold at which variables should be included in dimension score calculations (the default is .35).
 #' @return An mda data structure containing scores, means by group, and factor loadings
 #' @export
-mda_loadings <- function(data, n_factors, cor_min=.20, threshold=.35) {
+mda_loadings <- function(obs_by_group, n_factors, cor_min=.20, threshold=.35) {
   
   # retrieve numberic variables
-  nums <- unlist(lapply(data, is.numeric))
-  fact <- unlist(lapply(data, is.factor))
+  nums <- unlist(lapply(obs_by_group, is.numeric))
+  fact <- unlist(lapply(obs_by_group, is.factor))
   
   # text conditions
   if (sum(fact == TRUE) != 1) stop ("You must have a single categorial variable formated as a factor.")
   if (sum(nums == TRUE) < 2) stop ("You must have multiple numeric variables.")
   
   # separate numeric variables from categorical variable
-  d <- data[ , nums]
-  g <- data[ , fact]
+  d <- obs_by_group[ , nums]
+  g <- obs_by_group[ , fact]
   g <- as.vector(g)
   
   # remove columns with all zeros
@@ -76,14 +76,14 @@ mda_loadings <- function(data, n_factors, cor_min=.20, threshold=.35) {
 }
 
 #' A wrapper for the [nScree](https://search.r-project.org/CRAN/refmans/nFactors/html/nScree.html) function included in the nFactors package.
-#' @param data A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.
+#' @param obs_by_group A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.
 #' @param cor_min The correlation threshold for including variables in the factor analysis.
 #' @return A scree plot.
 #' @export
-screeplot_mda <- function(data, cor_min=.20) {
-  nums <- unlist(lapply(data, is.numeric))
+screeplot_mda <- function(obs_by_group, cor_min=.20) {
+  nums <- unlist(lapply(obs_by_group, is.numeric))
   if (sum(nums == TRUE) < 2) stop ("You must have multiple numeric variables.")
-  d <- data[ , nums]
+  d <- obs_by_group[ , nums]
   # remove columns with all zeros
   d <- d[, colSums(d != 0) > 0]
   m_cor <- cor(d, method = "pearson")

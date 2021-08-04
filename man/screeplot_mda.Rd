@@ -4,10 +4,10 @@
 \alias{screeplot_mda}
 \title{A wrapper for the \href{https://search.r-project.org/CRAN/refmans/nFactors/html/nScree.html}{nScree} function included in the nFactors package.}
 \usage{
-screeplot_mda(data_frame, cor_min = 0.2)
+screeplot_mda(obs_by_group, cor_min = 0.2)
 }
 \arguments{
-\item{data_frame}{A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.}
+\item{obs_by_group}{A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.}
 
 \item{cor_min}{The correlation threshold for including variables in the factor analysis.}
 }
