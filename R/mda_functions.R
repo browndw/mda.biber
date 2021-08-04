@@ -5,25 +5,25 @@
 #' The function mda_loadings() returns a data.frame of dimension scores with the means for each category
 #' and the factor loadings accessible as attributes. Calculating MDA requires a data.frame containing
 #' a column with a categorical variable (formatted as a factor) and more than 2 continuous, numeric variables.
-#' @param data_frame A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.
+#' @param data A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.
 #' @param n_factors The number of factors to be calculated in the factor analysis.
 #' @param cor_min The correlation threshold for including variables in the factor analysis.
 #' @param threshold A value indicating the threshold at which variables should be included in dimension score calculations (the default is .35).
 #' @return An mda data structure containing scores, means by group, and factor loadings
 #' @export
-mda_loadings <- function(data_frame, n_factors, cor_min=.20, threshold=.35) {
+mda_loadings <- function(data, n_factors, cor_min=.20, threshold=.35) {
   
   # retrieve numberic variables
-  nums <- unlist(lapply(data_frame, is.numeric))
-  fact <- unlist(lapply(data_frame, is.factor))
+  nums <- unlist(lapply(data, is.numeric))
+  fact <- unlist(lapply(data, is.factor))
   
   # text conditions
   if (sum(fact == TRUE) != 1) stop ("You must have a single categorial variable formated as a factor.")
   if (sum(nums == TRUE) < 2) stop ("You must have multiple numeric variables.")
   
   # separate numeric variables from categorical variable
-  d <- data_frame[ , nums]
-  g <- data_frame[ , fact]
+  d <- data[ , nums]
+  g <- data[ , fact]
   g <- as.vector(g)
   
   # remove columns with all zeros
@@ -39,7 +39,7 @@ mda_loadings <- function(data_frame, n_factors, cor_min=.20, threshold=.35) {
   m_z <- data.frame(scale(m_trim, center = TRUE, scale = TRUE))
   
   # carry out factor analysis and return loadings
-  fa1 <- factanal(m_trim, factors = n_factors, rotation="promax")
+  fa1 <- stats::factanal(m_trim, factors = n_factors, rotation="promax")
   f_loadings <- as.data.frame(unclass(fa1$loadings))
   
   idx <- seq(1:ncol(f_loadings))
@@ -76,14 +76,14 @@ mda_loadings <- function(data_frame, n_factors, cor_min=.20, threshold=.35) {
 }
 
 #' A wrapper for the [nScree](https://search.r-project.org/CRAN/refmans/nFactors/html/nScree.html) function included in the nFactors package.
-#' @param data_frame A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.
+#' @param data A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.
 #' @param cor_min The correlation threshold for including variables in the factor analysis.
 #' @return A scree plot.
 #' @export
-screeplot_mda <- function(data_frame, cor_min=.20) {
-  nums <- unlist(lapply(data_frame, is.numeric))
+screeplot_mda <- function(data, cor_min=.20) {
+  nums <- unlist(lapply(data, is.numeric))
   if (sum(nums == TRUE) < 2) stop ("You must have multiple numeric variables.")
-  d <- data_frame[ , nums]
+  d <- data[ , nums]
   # remove columns with all zeros
   d <- d[, colSums(d != 0) > 0]
   m_cor <- cor(d, method = "pearson")
