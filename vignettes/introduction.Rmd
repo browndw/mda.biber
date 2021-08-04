@@ -1,0 +1,119 @@
+---
+title: "Introduction to the mda.biber R package"
+author: "David Brown"
+output: rmarkdown::html_vignette
+bibliography: mda_bib.bib
+link-citations: yes
+nocite: |
+  @*
+vignette: >
+  %\VignetteIndexEntry{introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+## Load the mda.biber package
+
+Load the package, as well as others that we'll use in this vignette.
+
+```{r setup, message = FALSE, error=FALSE, warning=FALSE}
+library(mda.biber)
+library(corpora)
+library(corrplot)
+library(tidyverse)
+```
+
+## Multi-Dimensional Analysis (MDA)
+
+Multi-Dimensional Analysis (MDA) is a [complex statistical procedure](https://www.uni-bamberg.de/fileadmin/eng-ling/fs/Chapter_21/Index.html?Multidimensionalanalysis.html) developed by Douglas Biber. It is larger used to describe language as it varies by [genre, register, and use](https://www.uni-bamberg.de/fileadmin/eng-ling/fs/Chapter_21/Index.html?Multidimensionalanalysis.html).
+
+MDA is based on the fundamental linguistic principle that some linguistic variables co-occur (nouns and adjectives, for example) while others inversely co-occur (think nouns and pronouns).
+
+MDA in conducted in the following stages:
+
+1. Identification of relevant variables
+1. Extraction of factors from variables
+1. Functional interpretation of factors as dimensions
+1. Placement of categories on the dimensions
+
+The initial steps are carried out using well-established procures for factor analysis.
+
+## Inspect the data
+
+First, we inspect the data that comes with the package -- counts of features tagged using the [psuedobibeR package](https://github.com/browndw/pseudobibeR).
+
+```{r echo=FALSE}
+knitr::kable(head(micusp_biber[,1:6]))
+```
+
+[...]
+
+```{r echo=FALSE}
+knitr::kable(head(micusp_biber[,63:68]))
+```
+
+Note that the first column is the name of a document from the [Michigan Corpus of Upper-Level Student Papers (MICUSP)](https://elicorpora.info/), which includes various kinds of the meta-data. The beginning of the file, for example, has a series of upper-case letters that identify the displine the paper was written for (BIO = Biology).
+
+Because MDA involves a specific application of factor analysis, the first thing we need to do is to extract that string and covert the column to a factor (or categorical variable).
+
+```{r format_data, message = FALSE, error=FALSE, warning=FALSE}
+d <- micusp_biber %>%
+  mutate(doc_id = str_extract(doc_id, "^[A-Z]+")) %>%
+  mutate(doc_id = as.factor(doc_id))
+```
+
+## Determining the number of factors
+
+The package comes with a wrapper for the **nScree( )** function in **nFactors**. However, you can easily use any scree plotting function (or alternative method) for determining the number of factors to be calculated.
+
+
+```{r scree_plot, fig.height=4.5, fig.width=7}
+screeplot_mda(d)
+```
+
+## Inspecting a correlation matrix
+
+Next, we can create a correlation matrix and plot it using corrplot. Note the first line of code that omits any columns that contain only zeros.
+
+```{r, corr_plot, fig.height=5.5, fig.width=7}
+
+# Omit zero-only columnes
+d <- d[, colSums(d != 0) > 0]
+
+# create a corelation matrix
+cor_m <- cor(d[,-1], method = "pearson")
+
+# plot the matrix
+corrplot(cor_m, type = "upper", order = "hclust", tl.col = "black", tl.srt = 45, diag = F, tl.cex = 0.5)
+```
+
+## The **mda_loadings( )** function
+
+As the plot makes clear, there are groupings of features that positively and negatively correlate, making our data a good canditate for MDA. To carry out the MDA procude use the **mda_loadings( )** function.
+
+The function requires a data.frame with 1 factor (or categorical variable) and more than 2 numberic variables.
+
+Ideally, need at least 5 times as many texts as variables (i.e. 5 times more rows than columns).
+
+Variables that don't correlate with any other variable are dropped. The default threshold for dropping variables is **0.20**, but that can be changed in the function agruments.
+
+Also, MDA use a **promax** rotation.
+
+```{r mda}
+m <- mda_loadings(d, n_factors = 3)
+```
+
+
+
+## Bibliography
+
+
+
