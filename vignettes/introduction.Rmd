@@ -32,7 +32,7 @@ library(tidyverse)
 
 ## Multi-Dimensional Analysis (MDA)
 
-Multi-Dimensional Analysis (MDA) is a [complex statistical procedure](https://www.uni-bamberg.de/fileadmin/eng-ling/fs/Chapter_21/Index.html?Multidimensionalanalysis.html) developed by Douglas Biber. It is larger used to describe language as it varies by [genre, register, and use](https://www.uni-bamberg.de/fileadmin/eng-ling/fs/Chapter_21/Index.html?Multidimensionalanalysis.html).
+Multi-Dimensional Analysis (MDA) is a [complex statistical procedure](https://www.uni-bamberg.de/fileadmin/eng-ling/fs/Chapter_21/Index.html?Multidimensionalanalysis.html) developed by Douglas Biber. It is largely used to describe language as it varies by [genre, register, and use](https://www.uni-bamberg.de/fileadmin/eng-ling/fs/Chapter_21/Index.html?21Summary.html).
 
 MDA is based on the fundamental linguistic principle that some linguistic variables co-occur (nouns and adjectives, for example) while others inversely co-occur (think nouns and pronouns).
 
@@ -67,7 +67,7 @@ Because MDA involves a specific application of factor analysis, the first thing 
 d <- micusp_biber %>%
   mutate(doc_id = str_extract(doc_id, "^[A-Z]+")) %>%
   mutate(doc_id = as.factor(doc_id)) %>%
-  select(where(~ any(. != 0))) # removes any columns containing all zeros
+  select(where(~ any(. != 0))) # removes any columns containing all zeros as required for corrplot
 ```
 
 ## Determining the number of factors
@@ -103,8 +103,10 @@ Variables that don't correlate with any other variable are dropped. The default 
 
 Also, MDA use a **promax** rotation.
 
+For this demonstration, we'll return 2 factors (**n_factors = 2**):
+
 ```{r mda}
-m <- mda_loadings(d, n_factors = 3)
+m <- mda_loadings(d, n_factors = 2)
 ```
 
 ## MDA data structure
@@ -131,11 +133,17 @@ knitr::kable(head(attributes(m)$group_means))
 ### Factor loadings
 
 ```{r results='hide'}
-attributes(m)$loadings
+attributes(m)$loadings %>% arrange(-Factor1)
 ```
 
 ```{r echo=FALSE}
-knitr::kable(head(attributes(m)$loadings))
+knitr::kable(head(attributes(m)$loadings %>% arrange(-Factor1)))
+```
+
+[...]
+
+```{r echo=FALSE}
+knitr::kable(tail(attributes(m)$loadings %>% arrange(-Factor1)))
 ```
 
 ## Ploting the results
@@ -156,13 +164,33 @@ You can also generate a plot that combines the stick plot with a heatmap of the 
 heatmap_mda(m, n_factor=1)
 ```
 
-The plot highlights the variables that contribute to the positive end of cline like the verb *to be*, *if*, and indefinite pronouns. At the other end, are longer words, more atttributive adjectives, and prepositions.
+The plot highlights the variables that contribute to the positive end of cline like adverbs, *to be* as a main verb, and first-person pronouns. At the other end, are nounts, longer words, more atttributive adjectives, and prepositions.
 
 Alternatively, you can generate a plot of the kind that is common in reporting PCA, which combines scaled vectors of the relevant variable loadings and boxplots of the deminsion scores organized by group.
 
 ```{r boxplot_mda, fig.height=6.5, fig.width=7}
 boxplot_mda(m, n_factor=1)
 ```
+
+## Evaluating the dimensions
+
+Finally, the variation explained by each dimension can measured using linear regression.
+
+```{r}
+f1_lm <- lm(Factor1 ~ group, data = m)
+f2_lm <- lm(Factor2 ~ group, data = m)
+```
+
+```{r}
+f1_aov <- aov(Factor1 ~ group, data = m)
+f2_aov <- aov(Factor2 ~ group, data = m)
+```
+
+```{r}
+data.frame(Factor1 = t(broom::glance(f1_lm)), Factor2 = t(broom::glance(f2_lm))) %>% knitr::kable()
+```
+
+
 
 
 ## Bibliography
