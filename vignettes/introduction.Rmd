@@ -26,7 +26,6 @@ Load the package, as well as others that we'll use in this vignette.
 
 ```{r setup, message = FALSE, error=FALSE, warning=FALSE}
 library(mda.biber)
-library(corpora)
 library(corrplot)
 library(tidyverse)
 ```
@@ -149,15 +148,19 @@ The package contains a convenience function for making these kinds of plots. As 
 stickplot_mda(m, n_factor=1)
 ```
 
+Along this particular dimension, Philosophy is extremely positioned along the positive end, while History and various Engineering specialties are positioned at the negative end.
+
 You can also generate a plot that combines the stick plot with a heatmap of the relevant variables and their factor loadings.
 
 ```{r heatmap_mda, fig.height=5.5, fig.width=7}
 heatmap_mda(m, n_factor=1)
 ```
 
+The plot highlights the variables that contribute to the positive end of cline like the verb *to be*, *if*, and indefinite pronouns. At the other end, are longer words, more atttributive adjectives, and prepositions.
+
 Alternatively, you can generate a plot of the kind that is common in reporting PCA, which combines scaled vectors of the relevant variable loadings and boxplots of the deminsion scores organized by group.
 
-```{r boxplot_mda, fig.height=5.5, fig.width=7}
+```{r boxplot_mda, fig.height=6.5, fig.width=7}
 boxplot_mda(m, n_factor=1)
 ```
 
