@@ -67,7 +67,8 @@ Because MDA involves a specific application of factor analysis, the first thing 
 ```{r format_data, message = FALSE, error=FALSE, warning=FALSE}
 d <- micusp_biber %>%
   mutate(doc_id = str_extract(doc_id, "^[A-Z]+")) %>%
-  mutate(doc_id = as.factor(doc_id))
+  mutate(doc_id = as.factor(doc_id)) %>%
+  select(where(~ any(. != 0))) # removes any columns containing all zeros
 ```
 
 ## Determining the number of factors
@@ -84,9 +85,6 @@ screeplot_mda(d)
 Next, we can create a correlation matrix and plot it using corrplot. Note the first line of code that omits any columns that contain only zeros.
 
 ```{r, corr_plot, fig.height=5.5, fig.width=7}
-
-# Omit zero-only columnes
-d <- d[, colSums(d != 0) > 0]
 
 # create a corelation matrix
 cor_m <- cor(d[,-1], method = "pearson")
@@ -109,6 +107,37 @@ Also, MDA use a **promax** rotation.
 
 ```{r mda}
 m <- mda_loadings(d, n_factors = 3)
+```
+
+## MDA data structure
+
+The **mda_loadings( )** function returns a data frame containing the dimension score for each document/text. The score is calculated by:
+
+1. Standardizing data by converting to z-scores
+1. For each text, summing all of the high-positive variables and subtracting all of the high-negative variables.
+
+The high and high-negative are specified by a threshold value, which is conventionally **0.35**, but can be set in the function arguments.
+
+Also included in the data structure are the means-by-group, which is used for plotting, and the factor loadings. The values are stored as attributes.
+
+### Means
+
+```{r results='hide'}
+attributes(m)$group_means
+```
+
+```{r echo=FALSE}
+knitr::kable(head(attributes(m)$group_means))
+```
+
+### Factor loadsings
+
+```{r results='hide'}
+attributes(m)$loadings
+```
+
+```{r echo=FALSE}
+knitr::kable(head(attributes(m)$loadings))
 ```
 
 

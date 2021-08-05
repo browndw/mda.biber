@@ -136,7 +136,7 @@ stickplot_mda <- function(mda_data, n_factor=1) {
 #' The heatmap_mda() function combines a stick plot with a heat map of the relevant factor loadings.
 #' @param mda_data An mda data.frame produced by the mda_loadings() function.
 #' @param n_factor The factor to be plotted.
-#' @return A comined stick plot and heat map.
+#' @return A combined stick plot and heat map.
 #' @export
 heatmap_mda <- function(mda_data, n_factor=1) {
   
@@ -245,6 +245,11 @@ heatmap_mda <- function(mda_data, n_factor=1) {
   return(p4)
 }
 
+#' The boxplot_mda() function combines scaled vectors of the relevant factor loadings and boxplots of diminesion scores.
+#' @param mda_data An mda data.frame produced by the mda_loadings() function.
+#' @param n_factor The factor to be plotted.
+#' @return A combined plot of scaled vectors and boxplots.
+#' @export
 boxplot_mda <- function(mda_data, n_factor=1){
   
   if (class(mda_data)[1] != "mda") stop ("Your mda_data must be an mda object.")
