@@ -151,13 +151,13 @@ stickplot_mda(m, n_factor=1)
 
 You can also generate a plot that combines the stick plot with a heatmap of the relevant variables and their factor loadings.
 
-```{r heatmap_mda, fig.height=4.5, fig.width=7}
+```{r heatmap_mda, fig.height=5.5, fig.width=7}
 heatmap_mda(m, n_factor=1)
 ```
 
 Alternatively, you can generate a plot of the kind that is common in reporting PCA, which combines scaled vectors of the relevant variable loadings and boxplots of the deminsion scores organized by group.
 
-```{r boxplot_mda, fig.height=4.5, fig.width=7}
+```{r boxplot_mda, fig.height=5.5, fig.width=7}
 boxplot_mda(m, n_factor=1)
 ```
 
