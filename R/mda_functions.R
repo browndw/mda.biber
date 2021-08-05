@@ -65,7 +65,7 @@ mda_loadings <- function(obs_by_group, n_factors, cor_min=.20, threshold=.35) {
   dim_score <- dim_score[,unique(colnames(dim_score))]
   dim_score <- dim_score[c("group", setdiff(names(dim_score), "group"))]
   
-  g_scores <- lapply(idx , function(i) setNames(g_scores[[i]], c(paste0("Factor", idx[i]), "group")))
+  g_scores <- lapply(idx , function(i) setNames(g_scores[[i]], c("group", paste0("Factor", idx[i]))))
   g_scores <- suppressWarnings(Reduce(function(...) merge(..., by = "group", all=T), g_scores))
   
   attributes(dim_score)$threshold <- threshold
