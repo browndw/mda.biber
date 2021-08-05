@@ -12,7 +12,7 @@ heatmap_mda(mda_data, n_factor = 1)
 \item{n_factor}{The factor to be plotted.}
 }
 \value{
-A comined stick plot and heat map.
+A combined stick plot and heat map.
 }
 \description{
 The heatmap_mda() function combines a stick plot with a heat map of the relevant factor loadings.
