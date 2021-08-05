@@ -60,18 +60,18 @@ mda_loadings <- function(obs_by_group, n_factors, cor_min=.20, threshold=.35) {
   g_score <- lapply(idx, function(i){aggregate(score~group, dim_score[[i]], mean)})
   
   # format scores and return
-  dim_score <- lapply(idx, function(i) data.table::setnames(dim_score[[i]],  c(colnames(f_loadings[i]), "group")))
-  dim_score <- do.call("cbind", dim_score)
-  dim_score <- dim_score[,unique(colnames(dim_score))]
-  dim_score <- dim_score[c("group", setdiff(names(dim_score), "group"))]
+  #dim_score <- lapply(idx, function(i) data.table::setnames(dim_score[[i]],  c(colnames(f_loadings[i]), "group")))
+  #dim_score <- do.call("cbind", dim_score)
+  #dim_score <- dim_score[,unique(colnames(dim_score))]
+  #dim_score <- dim_score[c("group", setdiff(names(dim_score), "group"))]
   
   g_scores <- lapply(idx, function(i) data.table::setnames(g_score[[i]],  c("group", colnames(f_loadings[i]))))
   g_scores <- suppressWarnings(Reduce(function(...) merge(..., by = "group", all=T), g_scores))
   
-  attributes(dim_score)$threshold <- threshold
-  attributes(dim_score)$loadings <- f_loadings
-  attributes(dim_score)$group_means <- g_scores
-  dim_score <- structure(dim_score, class = c("mda", "data.frame"))
+  #attributes(dim_score)$threshold <- threshold
+  #attributes(dim_score)$loadings <- f_loadings
+  #attributes(dim_score)$group_means <- g_scores
+  #dim_score <- structure(dim_score, class = c("mda", "data.frame"))
   return(dim_score)
 }
 
