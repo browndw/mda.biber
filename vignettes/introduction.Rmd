@@ -208,8 +208,6 @@ anova_results %>% knitr::kable("html") %>%
 ```
 
 
-
-
 ## Bibliography
 
 
