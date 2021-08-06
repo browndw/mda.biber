@@ -30,3 +30,11 @@ The function also takes arguments for the minimum at which a variable must corre
 ```r
 m <- mda_loadings(d, n_factors = 3,  cor_min = .20, threshold = .35)
 ```
+
+The function outputs a data.frame of dimension scores for each observation (text or document) with the loadings and means accessible as attributes.
+
+```r
+attributes(m)$loadings
+attributes(m)$group_means
+```
+For more details, consult the [vignette]()
