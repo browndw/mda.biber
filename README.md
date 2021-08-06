@@ -37,4 +37,4 @@ The function outputs a data.frame of dimension scores for each observation (text
 attributes(m)$loadings
 attributes(m)$group_means
 ```
-For more details, consult the [vignette]()
+For more details, consult the [vignette](http://htmlpreview.github.io/?https://raw.githubusercontent.com/browndw/mda.biber/main/vignettes/introduction.html)
