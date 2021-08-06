@@ -60,7 +60,7 @@ knitr::kable(head(micusp_biber[,1:6]))
 knitr::kable(head(micusp_biber[,63:68]))
 ```
 
-Note that the first column is the name of a document from the [Michigan Corpus of Upper-Level Student Papers (MICUSP)](https://elicorpora.info/), which includes various kinds of the meta-data. The beginning of the file, for example, has a series of upper-case letters that identify the displine the paper was written for (BIO = Biology).
+Note that the first column is the name of a document from the [Michigan Corpus of Upper-Level Student Papers (MICUSP)](https://elicorpora.info/), which includes various kinds of the meta-data. The beginning of the file, for example, has a series of upper-case letters that identify the discipline the paper was written for (BIO = Biology).
 
 Because MDA involves a specific application of factor analysis, the first thing we need to do is to extract that string and covert the column to a factor (or categorical variable).
 
@@ -85,7 +85,7 @@ Next, we can create a correlation matrix and plot it using corrplot. Note the fi
 
 ```{r, corr_plot, fig.height=5.5, fig.width=7}
 
-# create a corelation matrix
+# create a correlation matrix
 cor_m <- cor(d[,-1], method = "pearson")
 
 # plot the matrix
@@ -94,13 +94,13 @@ corrplot(cor_m, type = "upper", order = "hclust", tl.col = "black", tl.srt = 45,
 
 ## The **mda_loadings( )** function
 
-As the plot makes clear, there are groupings of features that positively and negatively correlate, making our data a good canditate for MDA. To carry out the MDA procude use the **mda_loadings( )** function.
+As the plot makes clear, there are groupings of features that positively and negatively correlate, making our data a good candidate for MDA. To carry out the MDA procedure use the **mda_loadings( )** function.
 
-The function requires a data.frame with 1 factor (or categorical variable) and more than 2 numberic variables.
+The function requires a data.frame with 1 factor (or categorical variable) and more than 2 numeric variables.
 
 Ideally, need at least 5 times as many texts as variables (i.e. 5 times more rows than columns).
 
-Variables that don't correlate with any other variable are dropped. The default threshold for dropping variables is **0.20**, but that can be changed in the function agruments.
+Variables that don't correlate with any other variable are dropped. The default threshold for dropping variables is **0.20**, but that can be changed in the function arguments.
 
 Also, MDA use a **promax** rotation.
 
@@ -165,9 +165,9 @@ You can also generate a plot that combines the stick plot with a heatmap of the 
 heatmap_mda(m, n_factor=1)
 ```
 
-The plot highlights the variables that contribute to the positive end of cline like adverbs, *to be* as a main verb, and first-person pronouns. At the other end, are nounts, longer words, more atttributive adjectives, and prepositions.
+The plot highlights the variables that contribute to the positive end of cline like adverbs, *to be* as a main verb, and first-person pronouns. At the other end, are nouns, longer words, more attributive adjectives, and prepositions.
 
-Alternatively, you can generate a plot of the kind that is common in reporting PCA, which combines scaled vectors of the relevant variable loadings and boxplots of the deminsion scores organized by group.
+Alternatively, you can generate a plot of the kind that is common in reporting PCA, which combines scaled vectors of the relevant variable loadings and boxplots of the dimension scores organized by group.
 
 ```{r boxplot_mda, fig.height=6.5, fig.width=7}
 boxplot_mda(m, n_factor=1)
@@ -185,11 +185,11 @@ We will hack together a table that uses ANOVA to evaluate the dimensions and inc
 f1_lm <- lm(Factor1 ~ group, data = m)
 f2_lm <- lm(Factor2 ~ group, data = m)
 
-# Convert ANOVA results into dataframes allows for easier name manipulation
+# Convert ANOVA results into data.frames allows for easier name manipulation
 f1_aov <- data.frame(anova(f1_lm), r.squared = c(summary(f1_lm)$r.squared*100, NA))
 f2_aov <- data.frame(anova(f2_lm), r.squared = c(summary(f2_lm)$r.squared*100, NA))
 
-# Putting all into one dataframe/table
+# Putting all into one data.frame/table
 anova_results <- data.frame(rbind(c("DF", "Sum Sq", "Mean Sq", "F value", "Pr(>F)", "*R*^2^", 
                                     "DF", "Sum Sq", "Mean Sq", "F value", "Pr(>F)", "*R*^2^"), 
                                    cbind(round(f1_aov, 2), round(f2_aov, 2)))) 
