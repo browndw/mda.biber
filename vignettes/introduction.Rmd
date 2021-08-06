@@ -157,7 +157,7 @@ The package contains a convenience function for making these kinds of plots. As 
 stickplot_mda(m, n_factor=1)
 ```
 
-Along this particular dimension, Philosophy is extremely positioned along the positive end, while History and various Engineering specialties are positioned at the negative end.
+Along this particular dimension, Philosophy is positioned at the extreme positive end, while History and various Engineering specialties are positioned at the negative end.
 
 You can also generate a plot that combines the stick plot with a heatmap of the relevant variables and their factor loadings.
 
