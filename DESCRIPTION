@@ -17,12 +17,14 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports:
-    nFactors,
     dplyr,
     ggplot2,
-    viridis,
+    ggpubr,
     ggrepel,
-    tidyr
+    nFactors,
+    stats,
+    tidyr,
+    viridis
 Depends: 
     R (>= 2.10)
 Suggests: 
