@@ -2,18 +2,22 @@
 % Please edit documentation in R/mda_functions.R
 \name{screeplot_mda}
 \alias{screeplot_mda}
-\title{A wrapper for the \href{https://search.r-project.org/CRAN/refmans/nFactors/html/nScree.html}{nScree} function included in the nFactors package.}
+\title{Scree plot for multi-dimensional analysis}
 \usage{
 screeplot_mda(obs_by_group, cor_min = 0.2)
 }
 \arguments{
-\item{obs_by_group}{A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.}
+\item{obs_by_group}{A data frame containing 1 categorical (factor) variable
+and continuous (numeric) variables.}
 
-\item{cor_min}{The correlation threshold for including variables in the factor analysis.}
-}
-\value{
-A scree plot.
+\item{cor_min}{The correlation threshold for including variables in the
+factor analysis.}
 }
 \description{
-A wrapper for the \href{https://search.r-project.org/CRAN/refmans/nFactors/html/nScree.html}{nScree} function included in the nFactors package.
+The scree plot shows each factor along the X axis, and the proportion of
+common variance explained by that factor on the Y axis. The proportion of
+common variance explained is given by the factor eigenvalue.
+}
+\details{
+A wrapper for the \code{nFactors:nScree()} and \code{nFactors::plotnScree()} functions.
 }

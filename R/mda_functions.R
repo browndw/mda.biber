@@ -1,17 +1,31 @@
-#' Multi-Dimensional Analysis is a statistical procedure developed Biber and is commonly used in descriptions
-#' of language as it varies by genre, register, and task. The procedure is a specific application
-#' factor analysis, which is used as the basis for calculating a 'dimension score' for each text.
+#' Conduct multi-dimensional analysis
 #'
-#' The function mda_loadings() returns a data.frame of dimension scores with the means for each category
-#' and the factor loadings accessible as attributes. Calculating MDA requires a data.frame containing
-#' a column with a categorical variable (formatted as a factor) and more than 2 continuous, numeric variables.
-#' @param obs_by_group A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.
-#' @param n_factors The number of factors to be calculated in the factor analysis.
-#' @param cor_min The correlation threshold for including variables in the factor analysis.
-#' @param threshold A value indicating the threshold at which variables should be included in dimension score calculations (the default is .35).
-#' @return An mda data structure containing scores, means by group, and factor loadings
+#' Multi-Dimensional Analysis is a statistical procedure developed by Biber and
+#' is commonly used in descriptions of language as it varies by genre, register,
+#' and task. The procedure is a specific application of factor analysis, which
+#' is used as the basis for calculating a 'dimension score' for each text.
+#'
+#' The function `mda_loadings()` returns a `data.frame` of dimension scores with
+#' the means for each category and the factor loadings accessible as attributes.
+#' Calculating MDA requires a data.frame containing a column with a categorical
+#' variable (formatted as a factor) and more than 2 continuous, numeric
+#' variables.
+#'
+#' @param obs_by_group A data frame containing exactly 1 categorical (factor)
+#'   variable and multiple continuous (numeric) variables.
+#' @param n_factors The number of factors to be calculated in the factor
+#'   analysis.
+#' @param cor_min The correlation threshold for including variables in the
+#'   factor analysis. Variables whose (absolute) Pearson correlation with any
+#'   other variable is greater than this threshold will be included in the
+#'   factor analysis.
+#' @param threshold The threshold at which variables should be included in
+#'   dimension score calculations.
+#' @return An mda data structure containing scores, means by group, and factor
+#'   loadings
 #' @export
-mda_loadings <- function(obs_by_group, n_factors, cor_min=.20, threshold=.35) {
+#' @importFrom stats aggregate cor setNames
+mda_loadings <- function(obs_by_group, n_factors, cor_min = .20, threshold = .35) {
 
   # retrieve numberic variables
   nums <- unlist(lapply(obs_by_group, is.numeric))
@@ -24,7 +38,9 @@ mda_loadings <- function(obs_by_group, n_factors, cor_min=.20, threshold=.35) {
   # separate numeric variables from categorical variable
   d <- obs_by_group[ , nums]
   g <- obs_by_group[ , fact]
-  g <- as.vector(g)
+
+  # g is now a list with a single named entry. We only want the vector
+  g <- g[[1]]
 
   # remove columns with all zeros
   d <- d[, colSums(d != 0) > 0]
@@ -39,34 +55,36 @@ mda_loadings <- function(obs_by_group, n_factors, cor_min=.20, threshold=.35) {
   m_z <- data.frame(scale(m_trim, center = TRUE, scale = TRUE))
 
   # carry out factor analysis and return loadings
-  fa1 <- stats::factanal(m_trim, factors = n_factors, rotation="promax")
+  fa1 <- stats::factanal(m_trim, factors = n_factors, rotation = "promax")
   f_loadings <- as.data.frame(unclass(fa1$loadings))
 
-  idx <- seq(1:ncol(f_loadings))
+  idx <- seq_len(ncol(f_loadings))
 
   # generate scores for either individual observations or cagegory means
-  dim_score <- lapply(idx, function(i){
+  dim_score <- lapply(idx, function(i) {
     pos <- row.names(f_loadings)[f_loadings[,i] > threshold]
     neg <- row.names(f_loadings)[f_loadings[,i] < -threshold]
     pos_sums <- rowSums(m_z[pos])
     neg_sums <- rowSums(m_z[neg])
     dim_score <- pos_sums - neg_sums
-    dim_score <- data.frame(cbind(dim_score, g), stringsAsFactors = F)
+    dim_score <- data.frame(cbind(dim_score, g), stringsAsFactors = FALSE)
     colnames(dim_score) <- c("score", "group")
     dim_score$score <- as.numeric(dim_score$score)
     return(dim_score)
   })
 
-  g_scores <- lapply(idx, function(i){aggregate(score~group, dim_score[[i]], mean)})
+  g_scores <- lapply(idx, function(i) {
+    aggregate(score ~ group, dim_score[[i]], mean)
+  })
 
   # format scores and return
   dim_score <- lapply(idx , function(i) setNames(dim_score[[i]], c(paste0("Factor", idx[i]), "group")))
   dim_score <- do.call("cbind", dim_score)
-  dim_score <- dim_score[,unique(colnames(dim_score))]
+  dim_score <- dim_score[, unique(colnames(dim_score))]
   dim_score <- dim_score[c("group", setdiff(names(dim_score), "group"))]
 
-  g_scores <- lapply(idx , function(i) setNames(g_scores[[i]], c("group", paste0("Factor", idx[i]))))
-  g_scores <- suppressWarnings(Reduce(function(...) merge(..., by = "group", all=T), g_scores))
+  g_scores <- lapply(idx, function(i) setNames(g_scores[[i]], c("group", paste0("Factor", idx[i]))))
+  g_scores <- suppressWarnings(Reduce(function(...) merge(..., by = "group", all = TRUE), g_scores))
 
   attributes(dim_score)$threshold <- threshold
   attributes(dim_score)$loadings <- f_loadings
@@ -75,12 +93,20 @@ mda_loadings <- function(obs_by_group, n_factors, cor_min=.20, threshold=.35) {
   return(dim_score)
 }
 
-#' A wrapper for the [nScree](https://search.r-project.org/CRAN/refmans/nFactors/html/nScree.html) function included in the nFactors package.
-#' @param obs_by_group A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.
-#' @param cor_min The correlation threshold for including variables in the factor analysis.
-#' @return A scree plot.
+#' Scree plot for multi-dimensional analysis
+#'
+#' The scree plot shows each factor along the X axis, and the proportion of
+#' common variance explained by that factor on the Y axis. The proportion of
+#' common variance explained is given by the factor eigenvalue.
+#'
+#' A wrapper for the `nFactors:nScree()` and `nFactors::plotnScree()` functions.
+#'
+#' @param obs_by_group A data frame containing 1 categorical (factor) variable
+#'   and continuous (numeric) variables.
+#' @param cor_min The correlation threshold for including variables in the
+#'   factor analysis.
 #' @export
-screeplot_mda <- function(obs_by_group, cor_min=.20) {
+screeplot_mda <- function(obs_by_group, cor_min = 0.20) {
   nums <- unlist(lapply(obs_by_group, is.numeric))
   if (sum(nums == TRUE) < 2) stop ("You must have multiple numeric variables.")
   d <- obs_by_group[ , nums]
@@ -92,8 +118,8 @@ screeplot_mda <- function(obs_by_group, cor_min=.20) {
   m_trim <- d[, threshold]
   ev <- eigen(cor(m_trim))
   ap <- nFactors::parallel(subject=nrow(m_trim), var=ncol(m_trim), rep=100, cent=.05)
-  nS <- nFactors::nScree(x=ev$values, aparallel=ap$eigen$qevpea)
-  nFactors::plotnScree(nS, legend = F)
+  nS <- nFactors::nScree(x = ev$values, aparallel = ap$eigen$qevpea)
+  nFactors::plotnScree(nS, legend = FALSE)
 }
 
 #' A simple function for producing the stick plots that are common in visualizing the location of category means along a given dimension.
@@ -133,10 +159,11 @@ stickplot_mda <- function(mda_data, n_factor=1) {
   return(p1)
 }
 
-#' The heatmap_mda() function combines a stick plot with a heat map of the relevant factor loadings.
-#' @param mda_data An mda data.frame produced by the mda_loadings() function.
+#' Combine a stick plot with a heat map of the relevant factor loadings.
+#' @param mda_data An mda data.frame produced by the `mda_loadings()` function.
 #' @param n_factor The factor to be plotted.
 #' @return A combined stick plot and heat map.
+#' @importFrom stats reorder
 #' @export
 heatmap_mda <- function(mda_data, n_factor=1) {
 
@@ -181,9 +208,9 @@ heatmap_mda <- function(mda_data, n_factor=1) {
     ggplot2::theme(legend.position = "none")
 
   p2 <- ggplot2::ggplot(data.frame(x = 0, y = -2:2), ggplot2::aes(x, y)) +
-    ggplot2::geom_segment(ggplot2::aes(x=0, xend =0, y=1, yend = 2), size=.25,
+    ggplot2::geom_segment(ggplot2::aes(x=0, xend =0, y=1, yend = 2), linewidth=.25,
                  arrow = ggplot2::arrow(length = ggplot2::unit(0.25,"cm")), color = "gray40") +
-    ggplot2::geom_segment(ggplot2::aes(x=0, xend =0, y=-1, yend = -2), size=.25,
+    ggplot2::geom_segment(ggplot2::aes(x=0, xend =0, y=-1, yend = -2), linewidth=.25,
                  arrow = ggplot2::arrow(length = ggplot2::unit(0.25,"cm")), color = "gray40") +
     ggplot2::theme_void() +
     ggplot2::theme(plot.margin = ggplot2::unit(c(-.9,-5,-.9,-1), "lines"))
@@ -245,10 +272,11 @@ heatmap_mda <- function(mda_data, n_factor=1) {
   return(p4)
 }
 
-#' The boxplot_mda() function combines scaled vectors of the relevant factor loadings and boxplots of diminesion scores.
-#' @param mda_data An mda data.frame produced by the mda_loadings() function.
+#' Combine scaled vectors of the relevant factor loadings and boxplots of dimension scores.
+#' @param mda_data An mda data.frame produced by the `mda_loadings()` function.
 #' @param n_factor The factor to be plotted.
 #' @return A combined plot of scaled vectors and boxplots.
+#' @importFrom dplyr .data
 #' @export
 boxplot_mda <- function(mda_data, n_factor=1){
 
@@ -263,7 +291,7 @@ boxplot_mda <- function(mda_data, n_factor=1){
   vec_max <- max(abs(loadings[,factor_n]))
   scalar <- (value_max/vec_max)
 
-  loadings$Inclucde <- abs(loadings[, factor_n]) > threshold
+  loadings$Include <- abs(loadings[, factor_n]) > threshold
   loadings[, factor_n] <- loadings[, factor_n]*scalar
   loadings <- cbind(Group = rownames(loadings), data.frame(loadings, row.names=NULL))
 
@@ -287,9 +315,10 @@ boxplot_mda <- function(mda_data, n_factor=1){
     ggplot2::theme(panel.grid.minor.y = ggplot2::element_blank()) +
     ggplot2::coord_flip()
 
-  p2 <- ggplot2::ggplot(subset(loadings, Inclucde == T), ggplot2::aes(reorder(Group, !!as.name(factor_n)), !!as.name(factor_n))) +
-    ggplot2::geom_hline(yintercept = 0, color = "gray80", size = .5) +
-    ggplot2::geom_segment(ggplot2::aes(xend = Group, yend = 0), size = .25,
+  p2 <- ggplot2::ggplot(dplyr::filter(loadings, .data$Include == TRUE),
+                        ggplot2::aes(reorder(Group, !!as.name(factor_n)), !!as.name(factor_n))) +
+    ggplot2::geom_hline(yintercept = 0, color = "gray80", linewidth = .5) +
+    ggplot2::geom_segment(ggplot2::aes(xend = Group, yend = 0), linewidth = .25,
                  arrow = ggplot2::arrow(type = "closed",
                                ends = "first",
                                angle = "15",

@@ -2,26 +2,39 @@
 % Please edit documentation in R/mda_functions.R
 \name{mda_loadings}
 \alias{mda_loadings}
-\title{Multi-Dimensional Analysis is a statistical procedure developed Biber and is commonly used in descriptions
-of language as it varies by genre, register, and task. The procedure is a specific application
-factor analysis, which is used as the basis for calculating a 'dimension score' for each text.}
+\title{Conduct multi-dimensional analysis}
 \usage{
 mda_loadings(obs_by_group, n_factors, cor_min = 0.2, threshold = 0.35)
 }
 \arguments{
-\item{obs_by_group}{A data.frame containing 1 categorical (factor) variable and continuous (numeric) variables.}
+\item{obs_by_group}{A data frame containing exactly 1 categorical (factor)
+variable and multiple continuous (numeric) variables.}
 
-\item{n_factors}{The number of factors to be calculated in the factor analysis.}
+\item{n_factors}{The number of factors to be calculated in the factor
+analysis.}
 
-\item{cor_min}{The correlation threshold for including variables in the factor analysis.}
+\item{cor_min}{The correlation threshold for including variables in the
+factor analysis. Variables whose (absolute) Pearson correlation with any
+other variable is greater than this threshold will be included in the
+factor analysis.}
 
-\item{threshold}{A value indicating the threshold at which variables should be included in dimension score calculations (the default is .35).}
+\item{threshold}{The threshold at which variables should be included in
+dimension score calculations.}
 }
 \value{
-An mda data structure containing scores, means by group, and factor loadings
+An mda data structure containing scores, means by group, and factor
+loadings
 }
 \description{
-The function mda_loadings() returns a data.frame of dimension scores with the means for each category
-and the factor loadings accessible as attributes. Calculating MDA requires a data.frame containing
-a column with a categorical variable (formatted as a factor) and more than 2 continuous, numeric variables.
+Multi-Dimensional Analysis is a statistical procedure developed by Biber and
+is commonly used in descriptions of language as it varies by genre, register,
+and task. The procedure is a specific application of factor analysis, which
+is used as the basis for calculating a 'dimension score' for each text.
+}
+\details{
+The function \code{mda_loadings()} returns a \code{data.frame} of dimension scores with
+the means for each category and the factor loadings accessible as attributes.
+Calculating MDA requires a data.frame containing a column with a categorical
+variable (formatted as a factor) and more than 2 continuous, numeric
+variables.
 }

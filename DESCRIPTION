@@ -6,16 +6,16 @@ Authors@R:
            family = "Brown",
            role = c("aut", "cre"),
            email = "dwb2@andrew.cmu.edu",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           comment = c(ORCID = "0000-0001-7745-6354"))
 Description: Multi-Dimensional Analysis (MDA) is a complex statistical procedure developed by Douglas Biber. 
              It is largely used to describe language as it varies by genre, register, and use. The mda.biber package 
              contains functions for carrying out the calculations needed to describe and plot MDA results: 
              dimension scores, dimension means, and factor loadings.
-License: `use_mit_license()`
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.2
 Imports:
     dplyr,
     ggplot2,
@@ -29,5 +29,8 @@ Depends:
     R (>= 2.10)
 Suggests: 
     rmarkdown,
-    knitr
+    knitr,
+    corrplot,
+    kableExtra,
+    tidyverse
 VignetteBuilder: knitr
