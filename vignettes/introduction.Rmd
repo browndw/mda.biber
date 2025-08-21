@@ -65,15 +65,15 @@ Note that the first column is the name of a document from the [Michigan Corpus o
 Because MDA involves a specific application of factor analysis, the first thing we need to do is to extract that string and covert the column to a factor (or categorical variable).
 
 ```{r format_data, message = FALSE, error=FALSE, warning=FALSE}
-d <- micusp_biber %>%
-  mutate(doc_id = str_extract(doc_id, "^[A-Z]+")) %>%
-  mutate(doc_id = as.factor(doc_id)) %>%
+d <- micusp_biber |>
+  mutate(doc_id = str_extract(doc_id, "^[A-Z]+")) |>
+  mutate(doc_id = as.factor(doc_id)) |>
   select(where(~ any(. != 0))) # removes any columns containing all zeros as required for corrplot
 ```
 
 ## Determining the number of factors
 
-The package comes with a wrapper for the **nScree( )** function in **nFactors**. However, you can easily use any scree plotting function (or alternative method) for determining the number of factors to be calculated.
+The package comes with a wrapper for the `nScree()` function in **nFactors**. However, you can easily use any scree plotting function (or alternative method) for determining the number of factors to be calculated.
 
 ```{r scree_plot, fig.height=4.5, fig.width=7}
 screeplot_mda(d)
@@ -81,10 +81,11 @@ screeplot_mda(d)
 
 ## Inspecting a correlation matrix
 
-Next, we can create a correlation matrix and plot it using corrplot. Note the first line of code that omits any columns that contain only zeros.
+Next, we can create a correlation matrix and plot it using `corrplot()`. Note
+that earlier we omitted any columns that contain only zeros; if they existed,
+the correlation would be undefined.
 
 ```{r, corr_plot, fig.height=5.5, fig.width=7}
-
 # create a correlation matrix
 cor_m <- cor(d[,-1], method = "pearson")
 
@@ -92,9 +93,9 @@ cor_m <- cor(d[,-1], method = "pearson")
 corrplot(cor_m, type = "upper", order = "hclust", tl.col = "black", tl.srt = 45, diag = F, tl.cex = 0.5)
 ```
 
-## The **mda_loadings( )** function
+## The `mda_loadings()` function
 
-As the plot makes clear, there are groupings of features that positively and negatively correlate, making our data a good candidate for MDA. To carry out the MDA procedure use the **mda_loadings( )** function.
+As the plot makes clear, there are groupings of features that positively and negatively correlate, making our data a good candidate for MDA. To carry out the MDA procedure use the `mda_loadings()` function.
 
 The function requires a data.frame with 1 factor (or categorical variable) and more than 2 numeric variables.
 
@@ -104,7 +105,7 @@ Variables that don't correlate with any other variable are dropped. The default 
 
 Also, MDA use a **promax** rotation.
 
-For this demonstration, we'll return 2 factors (**n_factors = 2**):
+For this demonstration, we'll return 2 factors (`n_factors = 2`):
 
 ```{r mda}
 m <- mda_loadings(d, n_factors = 2)
@@ -112,7 +113,7 @@ m <- mda_loadings(d, n_factors = 2)
 
 ## MDA data structure
 
-The **mda_loadings( )** function returns a data frame containing the dimension score for each document/text. The score is calculated by:
+The `mda_loadings()` function returns a data frame containing the dimension score for each document/text. The score is calculated by:
 
 1. Standardizing data by converting to z-scores
 1. For each text, summing all of the high-positive variables and subtracting all of the high-negative variables.
@@ -154,7 +155,7 @@ One conventional way of plotting the results is to [place the means along a clin
 The package contains a convenience function for making these kinds of plots. As with all plotting functions, it is easy enough to tweak the code and customize your own plots.
 
 ```{r stickplot_mda, fig.height=4.5, fig.width=2.5}
-stickplot_mda(m, n_factor=1)
+stickplot_mda(m, n_factor = 1)
 ```
 
 Along this particular dimension, Philosophy is positioned at the extreme positive end, while History and various Engineering specialties are positioned at the negative end.
@@ -162,7 +163,7 @@ Along this particular dimension, Philosophy is positioned at the extreme positiv
 You can also generate a plot that combines the stick plot with a heatmap of the relevant variables and their factor loadings.
 
 ```{r heatmap_mda, fig.height=5.5, fig.width=7}
-heatmap_mda(m, n_factor=1)
+heatmap_mda(m, n_factor = 1)
 ```
 
 The plot highlights the variables that contribute to the positive end of cline like adverbs, *to be* as a main verb, and first-person pronouns. At the other end, are nouns, longer words, more attributive adjectives, and prepositions.
@@ -170,14 +171,14 @@ The plot highlights the variables that contribute to the positive end of cline l
 Alternatively, you can generate a plot of the kind that is common in reporting PCA, which combines scaled vectors of the relevant variable loadings and boxplots of the dimension scores organized by group.
 
 ```{r boxplot_mda, fig.height=6.5, fig.width=7}
-boxplot_mda(m, n_factor=1)
+boxplot_mda(m, n_factor = 1)
 ```
 
 ## Evaluating the dimensions
 
 Finally, the variation explained by each dimension can measured using linear regression.
 
-We will hack together a table that uses ANOVA to evaluate the dimensions and includes the *R*^2^ value. 
+We will hack together a table that uses ANOVA to evaluate the dimensions and includes the *R*^2^ value.
 
 ```{r}
 
@@ -190,9 +191,9 @@ f1_aov <- data.frame(anova(f1_lm), r.squared = c(summary(f1_lm)$r.squared*100, N
 f2_aov <- data.frame(anova(f2_lm), r.squared = c(summary(f2_lm)$r.squared*100, NA))
 
 # Putting all into one data.frame/table
-anova_results <- data.frame(rbind(c("DF", "Sum Sq", "Mean Sq", "F value", "Pr(>F)", "*R*^2^", 
-                                    "DF", "Sum Sq", "Mean Sq", "F value", "Pr(>F)", "*R*^2^"), 
-                                   cbind(round(f1_aov, 2), round(f2_aov, 2)))) 
+anova_results <- data.frame(rbind(c("DF", "Sum Sq", "Mean Sq", "F value", "Pr(>F)", "*R*^2^",
+                                    "DF", "Sum Sq", "Mean Sq", "F value", "Pr(>F)", "*R*^2^"),
+                                   cbind(round(f1_aov, 2), round(f2_aov, 2))))
 colnames(anova_results) <- c("", "", "", "", "", "", "", "", "", "", "", "")
 row.names(anova_results)[1] <- ""
 anova_results[is.na(anova_results)] <- "--"
@@ -201,7 +202,7 @@ anova_results[is.na(anova_results)] <- "--"
 And output the results:
 
 ```{r results='asis'}
-anova_results %>% knitr::kable("html") %>% 
+anova_results %>% knitr::kable("html") %>%
   kableExtra::kable_styling(bootstrap_options = "striped", full_width = F) %>%
   kableExtra::add_header_above(c("", "Dimension 1" = 6, "Dimension 2" = 6))
 
@@ -209,6 +210,3 @@ anova_results %>% knitr::kable("html") %>%
 
 
 ## Bibliography
-
-
-
