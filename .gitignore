@@ -7,6 +7,7 @@
 
 # Session Data files
 .RData
+.RDataTmp
 
 # User-specific files
 .Ruserdata
@@ -19,9 +20,11 @@
 
 # Output files from R CMD check
 /*.Rcheck/
+..Rcheck/
 
 # RStudio files
 .Rproj.user/
+*.Rproj
 
 # produced vignettes
 vignettes/*.html
@@ -40,4 +43,13 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# pkgdown site
+docs/
+_pkgdown.yml
+
+# testthat output
+tests/testthat/Rplots.pdf
+
+# Package documentation
 inst/doc
