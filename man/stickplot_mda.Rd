@@ -2,7 +2,7 @@
 % Please edit documentation in R/mda_functions.R
 \name{stickplot_mda}
 \alias{stickplot_mda}
-\title{A simple function for producing the stick plots that are common in visualizing the location of category means along a given dimension.}
+\title{Create stick plots for multi-dimensional analysis}
 \usage{
 stickplot_mda(mda_data, n_factor = 1)
 }
@@ -12,8 +12,9 @@ stickplot_mda(mda_data, n_factor = 1)
 \item{n_factor}{The factor to be plotted.}
 }
 \value{
-A stick plot showing category means long a positve/negative cline.
+A stick plot showing category means along a positive/negative cline.
 }
 \description{
-A simple function for producing the stick plots that are common in visualizing the location of category means along a given dimension.
+A simple function for producing the stick plots that are common in
+visualizing the location of category means along a given dimension.
 }

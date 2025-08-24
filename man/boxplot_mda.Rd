@@ -2,12 +2,12 @@
 % Please edit documentation in R/mda_functions.R
 \name{boxplot_mda}
 \alias{boxplot_mda}
-\title{The boxplot_mda() function combines scaled vectors of the relevant factor loadings and boxplots of diminesion scores.}
+\title{Create boxplot for multi-dimensional analysis}
 \usage{
 boxplot_mda(mda_data, n_factor = 1)
 }
 \arguments{
-\item{mda_data}{An mda data.frame produced by the mda_loadings() function.}
+\item{mda_data}{An mda data.frame produced by the \code{mda_loadings()} function.}
 
 \item{n_factor}{The factor to be plotted.}
 }
@@ -15,5 +15,6 @@ boxplot_mda(mda_data, n_factor = 1)
 A combined plot of scaled vectors and boxplots.
 }
 \description{
-The boxplot_mda() function combines scaled vectors of the relevant factor loadings and boxplots of diminesion scores.
+Combine scaled vectors of the relevant factor loadings and boxplots of
+dimension scores.
 }
