@@ -1,6 +1,6 @@
 Package: mda.biber
 Title: Functions for Multi-Dimensional Analysis
-Version: 1.0
+Version: 1.0.1
 Authors@R: 
     person(given = "David",
            family = "Brown",
@@ -32,5 +32,6 @@ Suggests:
     knitr,
     corrplot,
     kableExtra,
-    tidyverse
+    tidyverse,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
