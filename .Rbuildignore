@@ -1,0 +1,14 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^README\.Rmd$
+^LICENSE\.md$
+^\.github$
+^\.git$
+^\.gitignore$
+^\.DS_Store$
+^.*\.DS_Store$
+^\.\.Rcheck$
+^cran-comments\.md$
+^NEWS\.md$
+^doc$
+^Meta$
