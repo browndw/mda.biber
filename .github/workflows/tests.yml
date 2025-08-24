@@ -1,0 +1,50 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::testthat, any::devtools
+          needs: check
+
+      - name: Run Tests
+        run: |
+          library(testthat)
+          library(devtools)
+          
+          # Load the package
+          load_all()
+          
+          # Run tests and capture results
+          test_results <- test_dir("tests/testthat", reporter = "summary")
+          
+          # Print summary
+          cat("Test Results Summary:\n")
+          cat("====================\n")
+          print(test_results)
+          
+          # Check if any tests failed
+          if (any(test_results$failed > 0)) {
+            stop("Some tests failed!")
+          }
+          
+          cat("\n✅ All tests passed successfully!\n")
+        shell: Rscript {0}
