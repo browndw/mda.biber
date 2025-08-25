@@ -86,7 +86,7 @@ jobs:
         body: |
           ## mda.biber ${{ steps.package_info.outputs.package_version }}
           
-          🎉 **CRAN-ready source package for quanteda.extras**
+          🎉 **CRAN-ready source package for mda.biber**
           
           ### 📦 Installation from Release
           
