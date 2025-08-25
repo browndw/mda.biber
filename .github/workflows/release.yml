@@ -84,7 +84,7 @@ jobs:
         files: ${{ steps.package_info.outputs.tarball }}
         name: Release ${{ steps.package_info.outputs.package_version }}
         body: |
-          ## quanteda.extras ${{ steps.package_info.outputs.package_version }}
+          ## mda.biber ${{ steps.package_info.outputs.package_version }}
           
           🎉 **CRAN-ready source package for quanteda.extras**
           
