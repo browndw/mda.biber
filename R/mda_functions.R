@@ -80,8 +80,7 @@ mda_loadings <- function(obs_by_group, n_factors, cor_min = .20,
     pos_sums <- rowSums(m_z[pos])
     neg_sums <- rowSums(m_z[neg])
     dim_score <- pos_sums - neg_sums
-    dim_score <- data.frame(cbind(dim_score, g), stringsAsFactors = FALSE)
-    colnames(dim_score) <- c("score", "group")
+    dim_score <- data.frame(score = dim_score, group = g)
     dim_score$score <- as.numeric(dim_score$score)
     return(dim_score)
   })
