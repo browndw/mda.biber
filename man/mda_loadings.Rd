@@ -8,7 +8,8 @@ mda_loadings(obs_by_group, n_factors, cor_min = 0.2, threshold = 0.35)
 }
 \arguments{
 \item{obs_by_group}{A data frame containing exactly 1 categorical (factor)
-variable and multiple continuous (numeric) variables.}
+variable and multiple continuous (numeric) variables. Each row represents
+one document/observation.}
 
 \item{n_factors}{The number of factors to be calculated in the factor
 analysis.}
@@ -16,14 +17,16 @@ analysis.}
 \item{cor_min}{The correlation threshold for including variables in the
 factor analysis. Variables whose (absolute) Pearson correlation with any
 other variable is greater than this threshold will be included in the
-factor analysis.}
+factor analysis. Set to 0 to disable thresholding.}
 
-\item{threshold}{The threshold at which variables should be included in
-dimension score calculations.}
+\item{threshold}{The loading threshold above which variables should be
+included in factor score calculations. Set to 0 to include all variables.}
 }
 \value{
-An mda data structure containing scores, means by group, and factor
-loadings
+An \code{mda} data frame containing one row per document, containing
+factor scores for each document. Attributes include the correlation
+threshold (\code{threshold}), the factor loadings (\code{loadings}), and the mean
+factor score for each group (\code{group_means}).
 }
 \description{
 Multi-Dimensional Analysis is a statistical procedure developed by Biber and
@@ -32,9 +35,35 @@ and task. The procedure is a specific application of factor analysis, which
 is used as the basis for calculating a 'dimension score' for each text.
 }
 \details{
-The function \code{mda_loadings()} returns a \code{data.frame} of dimension scores with
-the means for each category and the factor loadings accessible as attributes.
-Calculating MDA requires a data.frame containing a column with a categorical
-variable (formatted as a factor) and more than 2 continuous, numeric
-variables.
+MDA is fundamentally factor analysis using the promax rotation, applied to
+the numeric variables in \code{obs_by_group}. However, MDA adds two screening steps:
+\enumerate{
+\item Only variables with a nontrivial correlation with any other variable are
+included; the correlation threshold is configurable with the \code{cor_min}
+argument.
+\item The factor scores are based only on variables whose loadings are greater
+(in absolute value) than the \code{threshold} argument. (Variables are
+standardized to ensure loadings are comparable.)
+}
+
+These two choices eliminate variables that are uncorrelated with others, and
+essentially enforce sparsity in each factor, ensuring it is loaded only on a
+smaller of variables.
+}
+\examples{
+# Extract the subject area from each document ID and use it as the grouping
+# variable
+micusp_biber$doc_id <- factor(substr(micusp_biber$doc_id, 1, 3))
+
+m <- mda_loadings(micusp_biber, n_factors = 2)
+
+attr(m, "group_means")
+}
+\references{
+Biber (1988). \emph{Variation across Speech and Writing}. Cambridge
+University Press.
+
+Biber (1992). "The multi-dimensional approach to linguistic analyses of genre
+variation: An overview of methodology and findings." \emph{Computers and the
+Humanities} 26 (5/6), 331-345.
 }

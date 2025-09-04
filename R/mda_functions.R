@@ -5,26 +5,52 @@
 #' and task. The procedure is a specific application of factor analysis, which
 #' is used as the basis for calculating a 'dimension score' for each text.
 #'
-#' The function `mda_loadings()` returns a `data.frame` of dimension scores with
-#' the means for each category and the factor loadings accessible as attributes.
-#' Calculating MDA requires a data.frame containing a column with a categorical
-#' variable (formatted as a factor) and more than 2 continuous, numeric
-#' variables.
+#' MDA is fundamentally factor analysis using the promax rotation, applied to
+#' the numeric variables in `obs_by_group`. However, MDA adds two screening steps:
+#'
+#' 1. Only variables with a nontrivial correlation with any other variable are
+#' included; the correlation threshold is configurable with the `cor_min`
+#' argument.
+#'
+#' 2. The factor scores are based only on variables whose loadings are greater
+#' (in absolute value) than the `threshold` argument. (Variables are
+#' standardized to ensure loadings are comparable.)
+#'
+#' These two choices eliminate variables that are uncorrelated with others, and
+#' essentially enforce sparsity in each factor, ensuring it is loaded only on a
+#' smaller of variables.
 #'
 #' @param obs_by_group A data frame containing exactly 1 categorical (factor)
-#'   variable and multiple continuous (numeric) variables.
+#'   variable and multiple continuous (numeric) variables. Each row represents
+#'   one document/observation.
 #' @param n_factors The number of factors to be calculated in the factor
 #'   analysis.
 #' @param cor_min The correlation threshold for including variables in the
 #'   factor analysis. Variables whose (absolute) Pearson correlation with any
 #'   other variable is greater than this threshold will be included in the
-#'   factor analysis.
-#' @param threshold The threshold at which variables should be included in
-#'   dimension score calculations.
-#' @return An mda data structure containing scores, means by group, and factor
-#'   loadings
+#'   factor analysis. Set to 0 to disable thresholding.
+#' @param threshold The loading threshold above which variables should be
+#'   included in factor score calculations. Set to 0 to include all variables.
+#' @return An `mda` data frame containing one row per document, containing
+#'   factor scores for each document. Attributes include the correlation
+#'   threshold (`threshold`), the factor loadings (`loadings`), and the mean
+#'   factor score for each group (`group_means`).
 #' @export
 #' @importFrom stats aggregate cor setNames factanal
+#' @references Biber (1988). *Variation across Speech and Writing*. Cambridge
+#'   University Press.
+#'
+#' Biber (1992). "The multi-dimensional approach to linguistic analyses of genre
+#' variation: An overview of methodology and findings." *Computers and the
+#' Humanities* 26 (5/6), 331-345.
+#' @examples
+#' # Extract the subject area from each document ID and use it as the grouping
+#' # variable
+#' micusp_biber$doc_id <- factor(substr(micusp_biber$doc_id, 1, 3))
+#'
+#' m <- mda_loadings(micusp_biber, n_factors = 2)
+#'
+#' attr(m, "group_means")
 mda_loadings <- function(obs_by_group, n_factors, cor_min = .20,
                          threshold = .35) {
 
