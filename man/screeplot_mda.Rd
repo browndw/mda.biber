@@ -21,3 +21,6 @@ common variance explained is given by the factor eigenvalue.
 \details{
 A wrapper for the \code{nFactors:nScree()} and \code{nFactors::plotnScree()} functions.
 }
+\seealso{
+\code{\link[=mda_loadings]{mda_loadings()}}
+}

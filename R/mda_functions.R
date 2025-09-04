@@ -149,6 +149,7 @@ mda_loadings <- function(obs_by_group, n_factors, cor_min = .20,
 #'   and continuous (numeric) variables.
 #' @param cor_min The correlation threshold for including variables in the
 #'   factor analysis.
+#' @seealso [mda_loadings()]
 #' @export
 screeplot_mda <- function(obs_by_group, cor_min = 0.20) {
   # Input validation
@@ -183,8 +184,8 @@ screeplot_mda <- function(obs_by_group, cor_min = 0.20) {
 #' A simple function for producing the stick plots that are common in
 #' visualizing the location of category means along a given dimension.
 #'
-#' @param mda_data An mda data.frame produced by the mda_loadings() function.
-#' @param n_factor The factor to be plotted.
+#' @param mda_data An mda data.frame produced by the `mda_loadings()` function.
+#' @param n_factor Index of the factor to be plotted.
 #' @return A stick plot showing category means along a positive/negative cline.
 #' @importFrom dplyr .data mutate
 #' @importFrom ggplot2 ggplot aes geom_point theme_classic theme element_blank

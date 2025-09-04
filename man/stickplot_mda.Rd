@@ -7,9 +7,9 @@
 stickplot_mda(mda_data, n_factor = 1)
 }
 \arguments{
-\item{mda_data}{An mda data.frame produced by the mda_loadings() function.}
+\item{mda_data}{An mda data.frame produced by the \code{mda_loadings()} function.}
 
-\item{n_factor}{The factor to be plotted.}
+\item{n_factor}{Index of the factor to be plotted.}
 }
 \value{
 A stick plot showing category means along a positive/negative cline.
