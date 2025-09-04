@@ -63,7 +63,7 @@ mda_loadings <- function(obs_by_group, n_factors, cor_min = .20,
   diag(m_cor) <- 0
 
   # trim variables that fall below correlation threshold
-  t <- apply(m_cor, 1, function(x) max(abs(x), na.rm = TRUE) > cor_min)
+  t <- apply(m_cor, 1, function(x) max(abs(x), na.rm = TRUE) >= cor_min)
   m_trim <- d[, t]
   m_z <- data.frame(scale(m_trim, center = TRUE, scale = TRUE))
 
