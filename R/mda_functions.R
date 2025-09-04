@@ -312,16 +312,12 @@ heatmap_mda <- function(mda_data, n_factor = 1) {
   p2 <- ggplot2::ggplot(
     data.frame(x = 0, y = -2:2), ggplot2::aes(.data$x, .data$y)
   ) +
-    ggplot2::geom_segment(
-      ggplot2::aes(x = 0, xend = 0, y = 1, yend = 2), linewidth = .25,
-      arrow = ggplot2::arrow(length = ggplot2::unit(0.25, "cm")),
-      color = "gray40"
-    ) +
-    ggplot2::geom_segment(
-      ggplot2::aes(x = 0, xend = 0, y = -1, yend = -2), linewidth = .25,
-      arrow = ggplot2::arrow(length = ggplot2::unit(0.25, "cm")),
-      color = "gray40"
-    ) +
+    ggplot2::annotate("segment", x = 0, xend = 0, y = 1, yend = 2, linewidth = .25,
+                      arrow = ggplot2::arrow(length = ggplot2::unit(0.25, "cm")),
+                      color = "gray40") +
+    ggplot2::annotate("segment", x = 0, xend = 0, y = -1, yend = -2, linewidth = .25,
+                      arrow = ggplot2::arrow(length = ggplot2::unit(0.25, "cm")),
+                      color = "gray40") +
     ggplot2::theme_void() +
     ggplot2::theme(
       plot.margin = ggplot2::unit(c(-.9, -5, -.9, -1), "lines")
