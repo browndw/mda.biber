@@ -180,14 +180,16 @@ screeplot_mda <- function(obs_by_group, cor_min = 0.20) {
   nFactors::plotnScree(n_scree, legend = FALSE)
 }
 
-#' Create stick plots for multi-dimensional analysis
+#' Plots of MDA factor group means and loadings
 #'
-#' A simple function for producing the stick plots that are common in
-#' visualizing the location of category means along a given dimension.
+#' Stick plots show each group's mean loading along a factor, plotted along a
+#' positive/negative cline. Heatmaps show each variable's loading on a factor.
+#' `stickplot_mda()` produces just a stick plot, while `heatmap_mda()` places a
+#' heatmap alongside the stick plot.
 #'
-#' @param mda_data An mda data.frame produced by the `mda_loadings()` function.
+#' @param mda_data An mda data frame produced by the `mda_loadings()` function.
 #' @param n_factor Index of the factor to be plotted.
-#' @return A stick plot showing category means along a positive/negative cline.
+#' @return ggplot object
 #' @importFrom dplyr .data mutate
 #' @importFrom ggplot2 ggplot aes geom_point theme_classic theme element_blank
 #'   xlim
@@ -243,13 +245,7 @@ stickplot_mda <- function(mda_data, n_factor = 1) {
   p1
 }
 
-#' Create heatmap plots for multi-dimensional analysis
-#'
-#' Combine a stick plot with a heat map of the relevant factor loadings.
-#'
-#' @param mda_data An mda data.frame produced by the `mda_loadings()` function.
-#' @param n_factor The factor to be plotted.
-#' @return A combined stick plot and heat map.
+#' @rdname stickplot_mda
 #' @importFrom dplyr .data mutate filter arrange
 #' @importFrom tidyr pivot_longer
 #' @importFrom stats reorder

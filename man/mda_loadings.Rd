@@ -24,9 +24,9 @@ included in factor score calculations. Set to 0 to include all variables.}
 }
 \value{
 An \code{mda} data frame containing one row per document, containing
-factor scores for each document. Attributes include the correlation
-threshold (\code{threshold}), the factor loadings (\code{loadings}), and the mean
-factor score for each group (\code{group_means}).
+factor scores for each document. Attributes include the number of factors
+(\code{n_factors}), the correlation threshold (\code{threshold}), the factor loadings
+(\code{loadings}), and the mean factor score for each group (\code{group_means}).
 }
 \description{
 Multi-Dimensional Analysis is a statistical procedure developed by Biber and

@@ -2,19 +2,24 @@
 % Please edit documentation in R/mda_functions.R
 \name{stickplot_mda}
 \alias{stickplot_mda}
-\title{Create stick plots for multi-dimensional analysis}
+\alias{heatmap_mda}
+\title{Plots of MDA factor group means and loadings}
 \usage{
 stickplot_mda(mda_data, n_factor = 1)
+
+heatmap_mda(mda_data, n_factor = 1)
 }
 \arguments{
-\item{mda_data}{An mda data.frame produced by the \code{mda_loadings()} function.}
+\item{mda_data}{An mda data frame produced by the \code{mda_loadings()} function.}
 
 \item{n_factor}{Index of the factor to be plotted.}
 }
 \value{
-A stick plot showing category means along a positive/negative cline.
+ggplot object
 }
 \description{
-A simple function for producing the stick plots that are common in
-visualizing the location of category means along a given dimension.
+Stick plots show each group's mean loading along a factor, plotted along a
+positive/negative cline. Heatmaps show each variable's loading on a factor.
+\code{stickplot_mda()} produces just a stick plot, while \code{heatmap_mda()} places a
+heatmap alongside the stick plot.
 }
