@@ -75,8 +75,8 @@ mda_loadings <- function(obs_by_group, n_factors, cor_min = .20,
 
   # generate scores for either individual observations or category means
   dim_score <- lapply(idx, function(i) {
-    pos <- row.names(f_loadings)[f_loadings[, i] > threshold]
-    neg <- row.names(f_loadings)[f_loadings[, i] < -threshold]
+    pos <- row.names(f_loadings)[f_loadings[, i] >= threshold]
+    neg <- row.names(f_loadings)[f_loadings[, i] <= -threshold]
     pos_sums <- rowSums(m_z[pos])
     neg_sums <- rowSums(m_z[neg])
     dim_score <- pos_sums - neg_sums
