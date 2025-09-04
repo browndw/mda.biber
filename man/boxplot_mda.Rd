@@ -18,3 +18,6 @@ A combined plot of scaled vectors and boxplots.
 Combine scaled vectors of the relevant factor loadings and boxplots of
 dimension scores.
 }
+\seealso{
+\code{\link[=stickplot_mda]{stickplot_mda()}}
+}

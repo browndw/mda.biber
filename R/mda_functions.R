@@ -18,7 +18,7 @@
 #'
 #' These two choices eliminate variables that are uncorrelated with others, and
 #' essentially enforce sparsity in each factor, ensuring it is loaded only on a
-#' smaller of variables.
+#' smaller set of variables.
 #'
 #' @param obs_by_group A data frame containing exactly 1 categorical (factor)
 #'   variable and multiple continuous (numeric) variables. Each row represents
@@ -43,6 +43,7 @@
 #' Biber (1992). "The multi-dimensional approach to linguistic analyses of genre
 #' variation: An overview of methodology and findings." *Computers and the
 #' Humanities* 26 (5/6), 331-345.
+#' @seealso [screeplot_mda()], [stickplot_mda()], [boxplot_mda()]
 #' @examples
 #' # Extract the subject area from each document ID and use it as the grouping
 #' # variable
@@ -51,6 +52,8 @@
 #' m <- mda_loadings(micusp_biber, n_factors = 2)
 #'
 #' attr(m, "group_means")
+#'
+#' heatmap_mda(m)
 mda_loadings <- function(obs_by_group, n_factors, cor_min = .20,
                          threshold = .35) {
 
@@ -196,6 +199,7 @@ screeplot_mda <- function(obs_by_group, cor_min = 0.20) {
 #' @importFrom viridis scale_fill_viridis
 #' @importFrom ggrepel geom_text_repel
 #' @export
+#' @seealso [boxplot_mda()]
 stickplot_mda <- function(mda_data, n_factor = 1) {
   # Input validation
   if (!inherits(mda_data, "mda")) {
@@ -424,6 +428,7 @@ heatmap_mda <- function(mda_data, n_factor = 1) {
 #' @return A combined plot of scaled vectors and boxplots.
 #' @importFrom dplyr .data
 #' @export
+#' @seealso [stickplot_mda()]
 boxplot_mda <- function(mda_data, n_factor = 1) {
   # Input validation
   if (!inherits(mda_data, "mda")) {

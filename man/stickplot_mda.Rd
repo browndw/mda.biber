@@ -23,3 +23,6 @@ positive/negative cline. Heatmaps show each variable's loading on a factor.
 \code{stickplot_mda()} produces just a stick plot, while \code{heatmap_mda()} places a
 heatmap alongside the stick plot.
 }
+\seealso{
+\code{\link[=boxplot_mda]{boxplot_mda()}}
+}

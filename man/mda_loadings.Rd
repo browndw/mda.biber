@@ -48,7 +48,7 @@ standardized to ensure loadings are comparable.)
 
 These two choices eliminate variables that are uncorrelated with others, and
 essentially enforce sparsity in each factor, ensuring it is loaded only on a
-smaller of variables.
+smaller set of variables.
 }
 \examples{
 # Extract the subject area from each document ID and use it as the grouping
@@ -58,6 +58,8 @@ micusp_biber$doc_id <- factor(substr(micusp_biber$doc_id, 1, 3))
 m <- mda_loadings(micusp_biber, n_factors = 2)
 
 attr(m, "group_means")
+
+heatmap_mda(m)
 }
 \references{
 Biber (1988). \emph{Variation across Speech and Writing}. Cambridge
@@ -66,4 +68,7 @@ University Press.
 Biber (1992). "The multi-dimensional approach to linguistic analyses of genre
 variation: An overview of methodology and findings." \emph{Computers and the
 Humanities} 26 (5/6), 331-345.
+}
+\seealso{
+\code{\link[=screeplot_mda]{screeplot_mda()}}, \code{\link[=stickplot_mda]{stickplot_mda()}}, \code{\link[=boxplot_mda]{boxplot_mda()}}
 }
