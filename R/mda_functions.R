@@ -445,7 +445,7 @@ boxplot_mda <- function(mda_data, n_factor = 1) {
   vec_max <- max(abs(loadings[, factor_n]))
   scalar <- (value_max / vec_max)
 
-  loadings$Include <- abs(loadings[, factor_n]) > threshold
+  loadings$Include <- abs(loadings[, factor_n]) >= threshold
   loadings[, factor_n] <- loadings[, factor_n] * scalar
   loadings <- cbind(
     Group = rownames(loadings),
