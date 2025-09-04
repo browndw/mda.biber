@@ -167,7 +167,7 @@ screeplot_mda <- function(obs_by_group, cor_min = 0.20) {
   m_cor <- cor(d, method = "pearson")
   diag(m_cor) <- 0
   threshold <- apply(m_cor, 1, function(x) {
-    max(abs(x), na.rm = TRUE) > cor_min
+    max(abs(x), na.rm = TRUE) >= cor_min
   })
   m_trim <- d[, threshold]
   ev <- eigen(cor(m_trim))
