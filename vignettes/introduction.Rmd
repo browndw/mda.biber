@@ -48,7 +48,7 @@ The initial steps are carried out using well-established procures for factor ana
 
 ## Inspect the data
 
-First, we inspect the data that comes with the package -- counts of features tagged using the [psuedobibeR package](https://github.com/browndw/pseudobibeR).
+First, we inspect the data that comes with the package -- counts of features tagged using the [pseudobibeR package](https://cran.r-project.org/package=pseudobibeR).
 
 ```{r echo=FALSE}
 knitr::kable(head(micusp_biber[,1:6]))
@@ -103,7 +103,7 @@ Ideally, need at least 5 times as many texts as variables (i.e. 5 times more row
 
 Variables that don't correlate with any other variable are dropped. The default threshold for dropping variables is **0.20**, but that can be changed in the function arguments.
 
-Also, MDA use a **promax** rotation.
+Also, MDA uses a **promax** rotation.
 
 For this demonstration, we'll return 2 factors (`n_factors = 2`):
 
