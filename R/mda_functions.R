@@ -32,9 +32,9 @@
 #' @param threshold The loading threshold above which variables should be
 #'   included in factor score calculations. Set to 0 to include all variables.
 #' @return An `mda` data frame containing one row per document, containing
-#'   factor scores for each document. Attributes include the correlation
-#'   threshold (`threshold`), the factor loadings (`loadings`), and the mean
-#'   factor score for each group (`group_means`).
+#'   factor scores for each document. Attributes include the number of factors
+#'   (`n_factors`), the correlation threshold (`threshold`), the factor loadings
+#'   (`loadings`), and the mean factor score for each group (`group_means`).
 #' @export
 #' @importFrom stats aggregate cor setNames factanal
 #' @references Biber (1988). *Variation across Speech and Writing*. Cambridge
@@ -130,6 +130,7 @@ mda_loadings <- function(obs_by_group, n_factors, cor_min = .20,
     Reduce(function(...) merge(..., by = "group", all = TRUE), g_scores)
   )
 
+  attributes(dim_score)$n_factors <- n_factors
   attributes(dim_score)$threshold <- threshold
   attributes(dim_score)$loadings <- f_loadings
   attributes(dim_score)$group_means <- g_scores
@@ -201,6 +202,10 @@ stickplot_mda <- function(mda_data, n_factor = 1) {
   if (!is.numeric(n_factor) || n_factor < 1) {
     stop("n_factor must be a positive integer.")
   }
+  if (n_factor > attributes(mda_data)$n_factors) {
+    stop("n_factor is set larger than the number of factors")
+  }
+
   scores <- attributes(mda_data)$group_means
 
   factor_n <- paste0("Factor", n_factor)
@@ -258,14 +263,9 @@ heatmap_mda <- function(mda_data, n_factor = 1) {
     stop("n_factor must be a positive integer.")
   }
   loadings <- attributes(mda_data)$loadings
-  scores <- attributes(mda_data)$group_means
   threshold <- attributes(mda_data)$threshold
 
   factor_n <- paste0("Factor", n_factor)
-
-  scores <- dplyr::mutate(scores, pos_neg = ifelse(
-    !!as.name(factor_n) > 0, "High", "Low"
-  ))
 
   loadings <- data.frame(var_cat = row.names(loadings), loadings)
   loadings <- tidyr::pivot_longer(loadings, -.data$var_cat, names_to = "factor")
@@ -284,31 +284,7 @@ heatmap_mda <- function(mda_data, n_factor = 1) {
   loading_max <- ifelse(max(loadings$value) > 1, max(loadings$value), 1)
   loading_min <- ifelse(min(loadings$value) < -1, min(loadings$value), -1)
 
-  p1 <- ggplot2::ggplot(
-    scores,
-    ggplot2::aes(
-      y = !!as.name(factor_n), x = 1, label = .data$group,
-      fill = .data$pos_neg
-    )
-  ) +
-    ggplot2::geom_point(shape = 21) +
-    viridis::scale_fill_viridis(discrete = TRUE) +
-    ggplot2::theme_classic() +
-    ggplot2::theme(
-      axis.line.x  = ggplot2::element_blank(),
-      axis.ticks.x = ggplot2::element_blank(),
-      axis.text.x  = ggplot2::element_blank(),
-      axis.title = ggplot2::element_blank()
-    ) +
-    ggrepel::geom_text_repel(
-      nudge_x      = 0.25,
-      direction    = "y",
-      hjust        = 0,
-      segment.size = 0.1,
-      size = 2
-    ) +
-    ggplot2::xlim(1, 2) +
-    ggplot2::theme(legend.position = "none")
+  p1 <- stickplot_mda(mda_data, n_factor)
 
   p2 <- ggplot2::ggplot(
     data.frame(x = 0, y = -2:2), ggplot2::aes(.data$x, .data$y)
