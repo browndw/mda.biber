@@ -79,10 +79,10 @@ mda_loadings <- function(obs_by_group, n_factors, cor_min = .20,
 
   # separate numeric variables from categorical variable
   d <- obs_by_group[, nums]
-  g <- obs_by_group[, fact]
 
-  # g is now a list with a single named entry. We only want the vector
-  g <- g[[1]]
+  # indexing a single column in a data frame yields a vector; in a tibble it
+  # yields a data frame. force df behavior for consistency
+  g <- obs_by_group[, fact, drop = TRUE]
 
   # remove columns with all zeros
   d <- d[, colSums(d != 0) > 0]

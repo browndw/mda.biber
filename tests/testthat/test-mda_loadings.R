@@ -49,6 +49,11 @@ test_that("mda_loadings function works correctly", {
   group_means <- attributes(result)$group_means
   expect_s3_class(group_means, "data.frame")
   expect_true("group" %in% colnames(group_means))
+
+  # Ensure the result is the same for a data.frame argument as it is for a
+  # tibble argument (as indexing differs)
+  df_result <- mda_loadings(as.data.frame(test_subset), n_factors = 2)
+  expect_equal(result, df_result)
 })
 
 test_that("mda_loadings input validation works", {
