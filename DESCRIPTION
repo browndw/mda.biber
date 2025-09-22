@@ -1,16 +1,24 @@
 Package: mda.biber
 Title: Functions for Multi-Dimensional Analysis
 Version: 1.0.1
+Date: 2025-09-22
 Authors@R: 
-    person(given = "David",
-           family = "Brown",
-           role = c("aut", "cre"),
-           email = "dwb2@andrew.cmu.edu",
-           comment = c(ORCID = "0000-0001-7745-6354"))
-Description: Multi-Dimensional Analysis (MDA) is a complex statistical procedure developed by Douglas Biber. 
-             It is largely used to describe language as it varies by genre, register, and use. The mda.biber package 
-             contains functions for carrying out the calculations needed to describe and plot MDA results: 
-             dimension scores, dimension means, and factor loadings.
+    c(
+      person(given = "David",
+             family = "Brown",
+             role = c("aut", "cre"),
+             email = "dwb2@andrew.cmu.edu",
+             comment = c(ORCID = "0000-0001-7745-6354")),
+      person(given = "Alex",
+             family = "Reinhart",
+             role = "aut",
+             email = "areinhar@stat.cmu.edu",
+             comment = c(ORCID = "0000-0002-6658-514X")))
+Description: Multi-Dimensional Analysis (MDA) is an adaptation of factor
+  analysis developed by Douglas Biber. Its most common use is to describe
+  language as it varies by genre, register, and use. This package contains
+  functions for carrying out the calculations needed to describe and plot MDA
+  results: dimension scores, dimension means, and factor loadings.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
