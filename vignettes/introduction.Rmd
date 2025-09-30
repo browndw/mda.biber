@@ -148,7 +148,7 @@ knitr::kable(head(attributes(m)$loadings %>% arrange(-Factor1)))
 knitr::kable(tail(attributes(m)$loadings %>% arrange(-Factor1)))
 ```
 
-## Ploting the results
+## Plotting the results
 
 One conventional way of plotting the results is to [place the means along a cline in a kind of stick plot](https://www.uni-bamberg.de/fileadmin/eng-ling/fs/Chapter_21/Index.html?23DimensionsofEnglish.html).
 
