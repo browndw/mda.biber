@@ -154,6 +154,7 @@ mda_loadings <- function(obs_by_group, n_factors, cor_min = .20,
 #' @param cor_min The correlation threshold for including variables in the
 #'   factor analysis.
 #' @seealso [mda_loadings()]
+#' @return Nothing returned
 #' @export
 screeplot_mda <- function(obs_by_group, cor_min = 0.20) {
   # Input validation

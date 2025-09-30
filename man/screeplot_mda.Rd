@@ -13,6 +13,9 @@ and continuous (numeric) variables.}
 \item{cor_min}{The correlation threshold for including variables in the
 factor analysis.}
 }
+\value{
+Nothing returned
+}
 \description{
 The scree plot shows each factor along the X axis, and the proportion of
 common variance explained by that factor on the Y axis. The proportion of
