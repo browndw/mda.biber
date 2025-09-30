@@ -67,7 +67,7 @@ University Press.
 
 Biber (1992). "The multi-dimensional approach to linguistic analyses of genre
 variation: An overview of methodology and findings." \emph{Computers and the
-Humanities} 26 (5/6), 331-345.
+Humanities} 26 (5/6), 331-345. \doi{10.1007/BF00136979}
 }
 \seealso{
 \code{\link[=screeplot_mda]{screeplot_mda()}}, \code{\link[=stickplot_mda]{stickplot_mda()}}, \code{\link[=boxplot_mda]{boxplot_mda()}}

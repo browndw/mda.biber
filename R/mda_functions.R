@@ -42,7 +42,7 @@
 #'
 #' Biber (1992). "The multi-dimensional approach to linguistic analyses of genre
 #' variation: An overview of methodology and findings." *Computers and the
-#' Humanities* 26 (5/6), 331-345.
+#' Humanities* 26 (5/6), 331-345. \doi{10.1007/BF00136979}
 #' @seealso [screeplot_mda()], [stickplot_mda()], [boxplot_mda()]
 #' @examples
 #' # Extract the subject area from each document ID and use it as the grouping
